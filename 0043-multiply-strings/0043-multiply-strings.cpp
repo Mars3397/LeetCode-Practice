@@ -23,14 +23,11 @@ public:
 
                 int idx = (mn-1) - (m-1-i) - (n-1-j);
                 nums[idx] += d1 * d2;
-            }
-        }
 
-        // deal with carries and 
-        for (int i = mn - 1, carry = 0; i >= 0; --i) {
-            nums[i] += carry;
-            carry = nums[i] / 10;
-            nums[i] %= 10;
+                // handle carry
+                nums[idx-1] += nums[idx] / 10;
+                nums[idx] %= 10;
+            }
         }
 
         // skip leading zero
