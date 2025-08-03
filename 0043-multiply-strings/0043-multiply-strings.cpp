@@ -11,35 +11,38 @@ Analysis
 class Solution {
 public:
     string multiply(string num1, string num2) {
-        int m = num1.size(), n = num2.size(), mn = m * n;
+        int m = num1.size(), n = num2.size(), mn = m * n + 1;
         vector<int> nums(mn, 0);
 
         // calculate all intermidiate numbers
-        for (int i = 0; i < m; ++i) {
+        for (int i = m - 1; i >= 0; --i) {
             int d1 = num1[i] - '0';
 
-            for (int j = 0; j < n; ++j) {
+            for (int j = n - 1; j >= 0; --j) {
                 int d2 = num2[j] - '0';
 
-                nums[i+j] += d1 * d2;
+                int idx = (mn-1) - (m-1-i) - (n-1-j);
+                nums[idx] += d1 * d2;
             }
         }
 
-        // skip leading zero
-        int idx = mn - 1, carry = 0;
-        while (idx >= 0 && nums[idx] == 0) --idx;
-
-        // deal with carries and form the result string (reversely)
-        string ans = idx < 0 ? "0" : "";
-        for (int i = idx; i >= 0; --i) {
+        // deal with carries and 
+        for (int i = mn - 1, carry = 0; i >= 0; --i) {
             nums[i] += carry;
             carry = nums[i] / 10;
-            ans = to_string(nums[i] % 10) + ans;
+            nums[i] %= 10;
         }
 
-        // handle carry for the first digit
-        if (carry > 0) ans = to_string(carry) + ans;
+        // skip leading zero
+        int idx = 0;
+        while (idx < mn && nums[idx] == 0) ++idx;
 
-        return ans;
+        // form the result string (reversely)
+        string ans = "";
+        for (int i = idx; i < mn; ++i) {
+            ans += to_string(nums[i]);
+        }
+
+        return ans == "" ? "0" : ans;
     }
 };
