@@ -29,8 +29,6 @@ public:
     vector<vector<int>> subsets(vector<int>& nums) {
         N = nums.size();
         vector<int> cur;
-        cur.reserve(N);
-        ans.reserve(pow(2, N));
 
         backtrack(nums, 0, cur);
 
