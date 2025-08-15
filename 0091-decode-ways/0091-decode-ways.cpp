@@ -35,10 +35,6 @@ public:
             combination[i] = combination[i-1];
         }
 
-        for (int i : combination) {
-            cout << i << " ";
-        }
-
         return combination[n-1];
     }
 };
