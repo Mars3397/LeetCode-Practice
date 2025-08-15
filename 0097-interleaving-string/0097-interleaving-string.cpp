@@ -1,7 +1,7 @@
 /*
 Approach
 1. use a 2D DP approach to solve this problem
-2. dp[i][j] = wether s2[0...i+j-1] isInterleave by s1[0...i-1] and s2[0...j-1]
+2. dp[i][j] = wether s3[0...i+j-1] isInterleave by s1[0...i-1] and s2[0...j-1]
 3. transition:  if dp[i-1][j] -> check s3[i+j-1] == s1[i-1]
                 if dp[i][j-1] -> check s3[i+j-1] == s2[j-1]
 4. if a row is all false -> return false (a char in s3 exists neither in s1 nor s2)
