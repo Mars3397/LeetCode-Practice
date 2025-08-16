@@ -17,7 +17,6 @@ Analysis
 class Solution {
 private:
     TreeNode* construct(vector<int>& preorder, vector<int>& inorder, int pl, int pr, int il, int ir) {
-        cout << pl << " " << pr << " " << il << " " << ir << endl;
         if (pl == pr) return new TreeNode(preorder[pl]);
         if (pl > pr) return nullptr;
 
