@@ -21,11 +21,8 @@ private:
         if (pl > pr) return nullptr;
 
         int ls = 0; // left subtree size
-        for (int i = il; i <= ir; ++i) {
-            if (inorder[i] == preorder[pl]) {
-                ls = i - il;
-                break;
-            }
+        while (il+ls <= ir && inorder[il+ls] != preorder[pl]) {
+            ++ls;
         }
 
         TreeNode *subRoot = new TreeNode(preorder[pl]);
