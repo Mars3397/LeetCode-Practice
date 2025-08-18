@@ -12,16 +12,17 @@ Anaysis
 class Solution {
 public:
     int longestConsecutive(vector<int>& nums) {
-        unordered_set<int> s(nums.begin(), nums.end());
+        unordered_map<int,int> len;  // 端點 -> 區間長度
         int best = 0;
-
-        for (int x : s) {
-            // 只有在 x 是一段的起點（x-1 不存在）時才延伸
-            if (!s.count(x - 1)) {
-                int y = x;
-                while (s.count(y)) ++y;          // 數到最右 y（第一個不存在的位置）
-                best = max(best, y - x);          // 長度 = y - x
-            }
+        for (int x : nums) {
+            if (len.count(x)) continue;          // 已處理過，略過重複
+            int L = len.count(x - 1) ? len[x - 1] : 0;
+            int R = len.count(x + 1) ? len[x + 1] : 0;
+            int tot = L + 1 + R;
+            len[x] = tot;                         // 中間點隨便設，關鍵是端點
+            len[x - L] = tot;                     // 更新左端點
+            len[x + R] = tot;                     // 更新右端點
+            best = max(best, tot);
         }
         return best;
     }
