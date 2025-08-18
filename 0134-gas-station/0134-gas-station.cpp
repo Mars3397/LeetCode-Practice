@@ -11,9 +11,9 @@ Analysis
 class Solution { 
 public:
     int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
-        int start = 0, tank = 0, n = gas.size();
+        int n = gas.size();
 
-        for (int cur = 0, start = 0; cur < n; ) {
+        for (int cur = 0, start, tank; cur < n; ) {
             start = cur;
             tank = 0;
 
