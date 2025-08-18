@@ -12,49 +12,17 @@ Anaysis
 class Solution {
 public:
     int longestConsecutive(vector<int>& nums) {
-        unordered_map<int, int> intervals;
-        unordered_set<int> seen;
-        int longest = 0;
+        unordered_set<int> s(nums.begin(), nums.end());
+        int best = 0;
 
-        for (int num : nums) {
-            // skip exist one
-            if (seen.count(num)) continue;
-
-            seen.insert(num);
-            auto next = intervals.find(num+1);
-            auto prev = intervals.find(num-1);
-            int start, end, prevEnd, nextEnd;
-
-            // concate 2 intervals
-            if (next != intervals.end() && prev != intervals.end()) {
-                prevEnd = prev->second, nextEnd = next->second;
-                start = min(num-1, prevEnd), end = max(num+1, nextEnd);
-                // remvoe old ones
-                intervals.erase(num-1); intervals.erase(prevEnd);
-                intervals.erase(num+1); intervals.erase(nextEnd);
-            } else if (next != intervals.end()) {
-                nextEnd = next->second;
-                start = min(num, nextEnd), end = max(num+1, nextEnd);
-                // remove old ones
-                intervals.erase(num+1); intervals.erase(nextEnd);
-            } else if (prev != intervals.end()) {
-                prevEnd = prev->second;
-                start = min(num-1, prevEnd), end = max(num, prevEnd);
-                // remove old ones
-                intervals.erase(num-1); intervals.erase(prevEnd);
-            } else {
-                start = num, end = num;
+        for (int x : s) {
+            // 只有在 x 是一段的起點（x-1 不存在）時才延伸
+            if (!s.count(x - 1)) {
+                int y = x;
+                while (s.count(y)) ++y;          // 數到最右 y（第一個不存在的位置）
+                best = max(best, y - x);          // 長度 = y - x
             }
-
-            // insert new merged intervals
-            intervals[start] = end;
-            intervals[end] = start;
-
-            longest = max(longest, (end - start) + 1);
         }
-
-        return longest;
+        return best;
     }
 };
-
-
