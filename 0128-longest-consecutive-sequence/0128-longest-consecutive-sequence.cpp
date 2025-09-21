@@ -1,29 +1,49 @@
 /*
 Approach
-1. store the sequence as intervals (start, end) in an unordered_map
-2. iterate through the nums to push and merge intervals while recording the maximum
-3. return the maximum
+1. store the intevals in head2tail and tail2head
+2. merge overlapping intervals when insert new numbers
+3. record the maximum sequence while inserting
 
-Anaysis
+Analysis
 1. time: O(n)
-2. space: 
+2. space: O(n)
 */
+
 
 class Solution {
 public:
     int longestConsecutive(vector<int>& nums) {
-        unordered_map<int,int> len;  // 端點 -> 區間長度
-        int best = 0;
-        for (int x : nums) {
-            if (len.count(x)) continue;          // 已處理過，略過重複
-            int L = len.count(x - 1) ? len[x - 1] : 0;
-            int R = len.count(x + 1) ? len[x + 1] : 0;
-            int tot = L + 1 + R;
-            len[x] = tot;                         // 中間點隨便設，關鍵是端點
-            len[x - L] = tot;                     // 更新左端點
-            len[x + R] = tot;                     // 更新右端點
-            best = max(best, tot);
+        unordered_map<int, int> head2tail, tail2head;
+        unordered_set<int> numSet(nums.begin(), nums.end());
+        int maxLen = 0;
+
+        for (int num : numSet) {
+            auto front = tail2head.find(num-1);
+            auto back = head2tail.find(num+1);
+
+            if (front != tail2head.end() && back != head2tail.end()) {
+                head2tail[front->second] = back->second;
+                tail2head[back->second] = front->second;
+                maxLen = max(maxLen, back->second - front->second + 1);
+                tail2head.erase(front);
+                head2tail.erase(back);
+            } else if (front != tail2head.end()) {
+                head2tail[front->second] = num;
+                tail2head[num] = front->second;
+                maxLen = max(maxLen, num - front->second + 1);
+                tail2head.erase(num-1);
+            } else if (back != head2tail.end()) {
+                tail2head[back->second] = num;
+                head2tail[num] = back->second;
+                maxLen = max(maxLen, back->second - num + 1);
+                head2tail.erase(num+1);
+            } else {
+                head2tail[num] = num;
+                tail2head[num] = num;
+                maxLen = max(maxLen, 1);
+            }
         }
-        return best;
+
+        return maxLen;
     }
 };
