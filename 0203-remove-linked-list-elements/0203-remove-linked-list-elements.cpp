@@ -1,37 +1,37 @@
 /*
 Approach
-1. single pass
-2. point the prev node to the next of deleted node
+1. declare a dummy pointer to help the deletion
+2. deletion: link the prev to next
 
-Analysis
-1. time: O(n) where n = the length of linked list
-2. space: O(1)
 */
-
 
 class Solution {
 public:
     ListNode* removeElements(ListNode* head, int val) {
-        if (!head) return nullptr; // length = 0
-
-        // declare dummy node
-        ListNode dummy = ListNode();
-        dummy.next = head;
-
-        // declare pointers
+        ListNode dummy(0, head);
         ListNode *prev = &dummy, *cur = head;
 
-        // iterate through linked list
         while (cur) {
             if (cur->val == val) {
-                prev->next = cur->next; // delete target node
-                cur = cur->next;
+                prev->next = cur->next;
             } else {
-                prev = prev->next;
-                cur = cur->next;
+                prev = cur;
             }
+            
+            cur = cur->next;
         }
 
         return dummy.next;
     }
 };
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
