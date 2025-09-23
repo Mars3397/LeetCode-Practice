@@ -1,37 +1,57 @@
 /*
 Approach
-1. iterative to push node to queue
-2. the size of queue will be the size of current level
+1. use a queue to hold nodes in level order
+2. after push all the children of current level in to queue, the size of queue will be the size of next level
+3. push level by level to result vector
 
 Analysis
 1. time: O(n) where n = number of nodes in the tree
-2. space: O(h) where h = height of the tree
+2. space: O(n) where n = number of nodes in the tree
 */
+
 
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
         if (!root) return {};
 
-        vector<vector<int>> ans;
-        queue<TreeNode*> q; 
+        // declaration
+        queue<TreeNode*> q;
+        vector<vector<int>> result;
+
+        // initialization
         q.push(root);
 
+        // push level by level
         while (!q.empty()) {
-            int levelCount = q.size();
-            vector<int> v; v.reserve(levelCount);
+            // number of nodes in current level
+            int n = q.size();
+            vector<int> level(n);
 
-            for (int i = 0; i < levelCount; ++i) {
-                v.push_back(q.front()->val);
-                if (q.front()->left) q.push(q.front()->left);
-                if (q.front()->right) q.push(q.front()->right);
-                q.pop();
+            for (int i = 0; i < n; ++i) {
+                TreeNode *node = q.front(); q.pop();
+                level[i] = node->val;
+
+                // push child to queue
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
             }
 
-            ans.push_back(v);
+            result.push_back(move(level));
         }
 
-
-        return ans;
+        return result;
     }
 };
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
