@@ -43,7 +43,7 @@ public:
 
         // calculate the avg
         while (!pq.empty()) {
-            vector<int> top = pq.top(); pq.pop();
+            const vector<int> &top = pq.top(); pq.pop();
             ratioSum += static_cast<double>(top[0]) / top[1];
         }
 
