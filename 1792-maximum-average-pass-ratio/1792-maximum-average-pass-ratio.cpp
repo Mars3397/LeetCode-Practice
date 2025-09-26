@@ -43,8 +43,9 @@ public:
 
         // calculate the avg
         while (!pq.empty()) {
-            const vector<int> &top = pq.top(); pq.pop();
+            const vector<int> &top = pq.top();
             ratioSum += static_cast<double>(top[0]) / top[1];
+            pq.pop();
         }
 
         return ratioSum / classes.size();
