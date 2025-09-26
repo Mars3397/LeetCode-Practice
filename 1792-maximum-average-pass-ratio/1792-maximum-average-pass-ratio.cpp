@@ -19,8 +19,8 @@ private:
         bool operator()(const vector<int> &a, const vector<int> &b) {
             double ax = static_cast<double>(a[0]), ay = static_cast<double>(a[1]);
             double bx = static_cast<double>(b[0]), by = static_cast<double>(b[1]);
-            double increaseA = (ay - ax) / (ay * ay + ay);
-            double increaseB = (by - bx) / (by * by + by);
+            double increaseA = (ax+1) / (ay+1) - ax / ay;
+            double increaseB = (bx+1) / (by+1) - bx / by;
 
             return increaseA < increaseB;
         }
