@@ -34,15 +34,11 @@ public:
         // distribute extra students to class with fewest student (if the pass ration is not 100%) 
         double ratioSum = 0.0;
         while (extraStudents && !pq.empty()) {
-            vector<int> top = move(pq.top()); pq.pop();
-            if (top[0] == top[1]) {
-                ratioSum += 1.0;
-            } else {
-                ++top[0];
-                ++top[1];
-                --extraStudents;
-                pq.push(top);
-            }
+            vector<int> top = pq.top(); pq.pop();
+            ++top[0];
+            ++top[1];
+            --extraStudents;
+            pq.push(top);
         }
 
         // calculate the avg
