@@ -1,49 +1,46 @@
 /*
 Approach
-1. first sort the nums to let us can skip duplicate numbers
-2. use a 2 pointer approach to find triplets
+1. sort nums
+2. use a 2 pointers approach to find triplets
 
 Analysis
 1. time: O(nlogn) + O(n^2) = O(n^2)
-2. space: O(n)
+2. space: O(1)
 */
-
 
 
 class Solution {
 public:
     vector<vector<int>> threeSum(vector<int>& nums) {
-        // sort number in nums
         sort(nums.begin(), nums.end());
-
-        // declaration
         vector<vector<int>> result;
-        int n = nums.size();
 
-        // start finding
+        int n = nums.size();
         for (int i = 0; i < n; ++i) {
-            int target = -nums[i];
+            // skip duplicates
+            if (i > 0 && nums[i] == nums[i-1]) continue;
 
             int l = i+1, r = n-1;
             while (l < r) {
-                int sum = nums[l] + nums[r];
-
-                if (sum == target) {
+                int sum = nums[i] + nums[l] + nums[r];
+                if (sum == 0) {
                     result.push_back({ nums[i], nums[l], nums[r] });
+                    // skip duplicates
+                    while (l < n-1 && nums[l] == nums[l+1]) {
+                        ++l;
+                    }
 
-                    // skip duplicate
-                    while (l < r && nums[l] == nums[l+1]) ++l;
-                    while (l < r && nums[r] == nums[r-1]) --r;
+                    while (r > 1 && nums[r] == nums[r-1]) {
+                        --r;
+                    }
+
                     ++l; --r;
-                } else if (sum < target) {
-                    ++l;
-                } else {
+                } else if (sum > 0) {
                     --r;
+                } else {
+                    ++l;
                 }
             }
-
-            // skip duplicate 
-            while (i < n-1 && nums[i] == nums[i+1]) ++i;
         }
 
         return result;
