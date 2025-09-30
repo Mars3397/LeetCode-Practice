@@ -1,33 +1,29 @@
 /*
 Approach
-1. within the reachable interval, choose the one that can jump the farest
-2. repeat until reach the end
+1. DP => dp[i] is the minimum steps from 0 to i
+2. transition function: for all j < i: find min(dp[j] + 1) where can jump from j to i
+3. return nums.size()-1
 
 Analysis
-1. time: O(n) where n = nums.size()
-2. space: O(1)
+1. time: O
 */
+
 
 class Solution {
 public:
     int jump(vector<int>& nums) {
-        int n = nums.size(), idx = 0, step = 0;
-        if (n == 1) return 0;
-        
-        while (step < n) {
-            if (idx + nums[idx] >= n-1) return step + 1;
+        int n = nums.size();
+        vector<int> minSteps(n, INT_MAX);
+        minSteps[0] = 0;
 
-            int maxReach = 0, end = min(n-1, nums[idx]) + idx;
-            for (int i = idx+1; i <= end; ++i) {
-                if (i + nums[i] >= maxReach) {
-                    maxReach = i + nums[i];
-                    idx = i;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                if (j + nums[j] >= i) {
+                    minSteps[i] = min(minSteps[i], minSteps[j] + 1);
                 }
             }
-
-            ++step;
         }
 
-        return 0;
+        return minSteps[n-1];
     }
 };
