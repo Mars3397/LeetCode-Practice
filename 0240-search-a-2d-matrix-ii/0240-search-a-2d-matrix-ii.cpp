@@ -9,9 +9,11 @@ Analysis
 1. time: O(m * n)
 2. space: O(m * n)
 
-Optimization
+Optimization 1
 1. binary search for each row -> time complexity become O(m * logn)
 2. search each rows until the first number in the row is bigger than target
+
+
 */
 
 
