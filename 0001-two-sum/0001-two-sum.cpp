@@ -1,32 +1,33 @@
 /*
 Approach
-1. use a hash map to find the complement
-2. iterate through the array to find complement in hash map
-
-Aanlysis
-1. time: O(n) where n = nums.size()
-2. space: O(n) where n = nums.size()
+1. brute force: cehck every pairs -> O(n^2)
+2. sorting + two pointer: O(nlogn) in time and O(1) in space
+3. store complement in unordered_map: O(n) in time and space
 */
 
 
 class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
-        unordered_map<int, int> seen; // (number, index)
+        // declare a hash table to store the complements
+        unordered_map<int, int> complements; // (number, index)
 
         int n = nums.size();
         for (int i = 0; i < n; ++i) {
-            // find complement
-            auto f = seen.find(target - nums[i]);
-            
-            // return when found
-            if (f != seen.end()) return { i, f->second };
+            // find complement in complements hash table
+            int complement = target - nums[i];
+            auto f = complements.find(complement);
+            if (f != complements.end()) {
+                // return index when found
+                return { i, f->second };
+            }
 
-            // insert the seen number and index pair
-            seen[nums[i]] = i;
+            // push number to the complement map
+            // push after find to prevent multiple use of a number
+            complements[nums[i]] = i;
         }
 
-        // default return (should not execute to here)
+        // should not be here
         return {};
     }
 };
