@@ -1,18 +1,22 @@
-/*
-Approach
-1. recursive to check node, node->left and node->right is the same or not
-
-Analysis
-1. time: O(n) where n = number of nodes in the tree
-2. space: O(h) where h = height of the tree
-*/
-
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
     bool isSameTree(TreeNode* p, TreeNode* q) {
+        // structure
         if (!p && !q) return true;
         if (!p || !q) return false;
 
+        // value
         if (p->val != q->val) return false;
 
         return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
