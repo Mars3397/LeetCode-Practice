@@ -1,42 +1,39 @@
 /*
 Approach
-1. maintain a sliding window to make sure: len - # max freq char <= k (can be replaced)
-2. try to extend right as much as possible
-3. move left until window is valid if extending right cause an invalid window
+1. sliding window + freq map
+2. make sure in the current window -> the freq of non major element (current size - # major ) <= k
+3. keep explore right and slide left when invalid
+4. record the maximum
 
 Analysis
-1. O(n) where n = s.size()
+1. time: O(n)
 2. space: O(1)
 */
 
 
 class Solution {
-private: 
-    int getMaxFreq(vector<int> &freq) {
-        int maxFreq = 0;
-
-        for (int i = 0; i < 26; ++i) {
-            maxFreq = max(maxFreq, freq[i]);
-        }
-
-        return maxFreq;
-    }
-
 public:
     int characterReplacement(string s, int k) {
+        int freq[26] = {0};
+        int l = 0, r = 0, major = 0; 
         int maxLen = 0, n = s.size();
-        vector<int> freq(26, 0);
 
-        for (int l = 0, r = 0; r < n; ++r) {
-            ++freq[s[r] - 'A'];
+        while (r < n) {
+            // increase freq count and update major
+            major = max(major, ++freq[s[r] - 'A']);
 
-            // mvoe left pointer to make len - # max freq char <= k
-            while ((r-l+1) - getMaxFreq(freq) > k) {
-                --freq[s[l++] - 'A'];
+            // check for valid or not
+            int curLen = r - l + 1;
+            while (curLen - major > k) { // shrink to valid
+                major = max(major, --freq[s[l] - 'A']);
+                ++l; --curLen;
             }
 
-            // record current length
-            maxLen = max(maxLen, r-l+1);
+            // record the max valid length
+            maxLen = max(maxLen, curLen);
+
+            // mvoe on to next index
+            ++r;
         }
 
         return maxLen;
