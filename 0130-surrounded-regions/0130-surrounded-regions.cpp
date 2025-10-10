@@ -1,57 +1,54 @@
 /*
 Approach
-1. declare a boolean board to record not surrounded cell
-2. use BFS to push all edge cell with 'O' to queue
-3. set all adjacent 'O' cell to not surround until no cell in queue
-4. iterate through board to set surrounded cell
+1. only the o cell connected to the edge of the matrix can remain 0 (mark them to '.')
+2. flip all non '.' O cell to X
 
 Analysis
-1. time: O(mn)
-2. space: O(mn)
+1. time: 
+2. space:
 */
 
-
 class Solution {
-private:
-    vector<pair<int, int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+private: 
+    int M, N;
+    const vector<pair<int, int>> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    void markCells(vector<vector<char>>& board, int r, int c) {
+        // mark as unsurrounded
+        board[r][c] = '.';
+
+        for (auto [dr, dc] : dirs) {
+            int nr = r + dr, nc = c + dc;
+            if (0 <= nr && nr < M && 0 <= nc && nc < N && board[nr][nc] == 'O') {
+                markCells(board, nr, nc);
+            }
+        }
+    }
 
 public:
     void solve(vector<vector<char>>& board) {
-        int m = board.size(), n = board[0].size();
-        vector<vector<bool>> surrounded(m, vector<bool>(n, true));
-        queue<pair<int, int>> q;
+        M = board.size(), N = board[0].size();
 
-        // push all 'O' cells on the edge to queue
-        for (int i = 0; i < m; ++i) {
-            if (board[i][0] == 'O') q.push({i, 0});
-            if (board[i][n-1] == 'O') q.push({i, n-1});
+        // mark unsurrounded region
+        // first and last columns
+        for (int i = 0; i < M; ++i) {
+            if (board[i][0] == 'O') markCells(board, i, 0);
+            if (board[i][N-1] == 'O') markCells(board, i, N-1);
+        }
+        // first and last rows
+        for (int j = 0; j < N; ++j) {
+            if (board[0][j] == 'O') markCells(board, 0, j);
+            if (board[M-1][j] == 'O') markCells(board, M-1, j);
         }
 
-        for (int j = 0; j < n; ++j) {
-            if (board[0][j] == 'O') q.push({0, j});
-            if (board[m-1][j] == 'O') q.push({m-1, j});
-        }
-
-        // BFS to push not surrounded cells
-        while (!q.empty()) {
-            auto [i, j] = q.front(); q.pop();
-            surrounded[i][j] = false;
-            for (auto [di, dj] : dirs) {
-                int ni = i+di, nj = j+dj;
-                if (ni < 0 || ni >= m || nj < 0 || nj >= n) continue;
-                if (board[ni][nj] == 'O' && surrounded[ni][nj]) {
-                    q.push({ni, nj});
-                }
+        // flip surrounded region
+        for (int i = 0; i < M; ++i) {
+            for (int j = 0; j < N; ++j) {
+                if (board[i][j] == 'O') board[i][j] = 'X';
+                else if (board[i][j] == '.') board[i][j] = 'O';
             }
         }
 
-        // update cells according to surrounded
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (board[i][j] == 'O' && surrounded[i][j]) {
-                    board[i][j] = 'X';
-                }
-            }
-        }
+        return;
     }
 };
