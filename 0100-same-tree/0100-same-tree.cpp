@@ -12,13 +12,14 @@
 class Solution {
 public:
     bool isSameTree(TreeNode* p, TreeNode* q) {
-        // structure
+        // check structure
         if (!p && !q) return true;
         if (!p || !q) return false;
 
-        // value
+        // check value
         if (p->val != q->val) return false;
 
+        // check all subtree
         return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
     }
 };
