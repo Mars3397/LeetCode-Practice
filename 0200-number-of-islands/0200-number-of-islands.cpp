@@ -1,77 +1,48 @@
 /*
-Test cases: 
-
-1 0 0 
-0 1 0 => 3
-0 0 1
-
-1 1 0
-0 1 1 => 2
-1 0 0
-
-1 1
-1 1 => 1
-
-0 0 
-0 0 => 0
-
 Approach
-1. BFS/DFS for each cell with '1' to explore the whole island
-2. mark explored land as '#' to avoid duplicate exploration
-3. plus one for island count when finish BFS/DFS exploration
+1. start with land cell and update all connected land to 0 (marked as explored), then +1 for island count
+2. repeat until all cells are 0
 
 Analysis
-1. time: O(m * n)
-2. space: O(m * n)
+1. time: O(mn)
+2. space: O(mn)
 */
-
 
 
 class Solution {
 private:
-    vector<pair<int, int>> dirs = { {0, -1}, {0, 1}, {1, 0}, {-1,0} };
     int M, N;
+    const vector<pair<int, int>> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-    void BFSExploration(vector<vector<char>> &grid, int &islandCount, int i, int j) {
-        queue<pair<int, int>> q; // (i, j)
-        q.push({ i, j }); // starting point
-        
+    void markLandCells(vector<vector<char>> &grid, int r, int c) {
         // mark as explored
-        grid[i][j] = '#';
+        grid[r][c] = '0';
 
-        while (!q.empty()) {
-            auto [r, c] = q.front(); q.pop();
-
-            // explore neighbors with land
-            for (auto [dr, dc] : dirs) {
-                int nr = r + dr, nc = c + dc;
-                if (0 <= nr && nr < M && 0 <= nc && nc < N && grid[nr][nc] == '1') {
-                    q.push({ nr, nc });
-                    
-                    // mark as explored
-                    grid[nr][nc] = '#';
-                }
+        // explore connected land
+        for (auto [dr, dc] : dirs) {
+            int nr = r + dr, nc = c + dc;
+            if (0 <= nr && nr < M && 0 <= nc && nc < N && grid[nr][nc] == '1') {
+                markLandCells(grid, nr, nc);
             }
         }
-
-        ++islandCount;
     }
 
 public:
     int numIslands(vector<vector<char>>& grid) {
-        // initialzation
-        int islandCount = 0;
+        // declare and init
         M = grid.size(), N = grid[0].size();
+        int count = 0;
 
-        // exploration (BFS)
+        // count island
         for (int i = 0; i < M; ++i) {
             for (int j = 0; j < N; ++j) {
                 if (grid[i][j] == '1') {
-                    BFSExploration(grid, islandCount, i, j);
+                    markLandCells(grid, i, j);
+                    ++count;
                 }
             }
         }
 
-        return islandCount;
+        return count;
     }
 };
