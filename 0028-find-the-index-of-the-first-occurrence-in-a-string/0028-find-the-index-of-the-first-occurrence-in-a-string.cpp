@@ -1,6 +1,7 @@
 class Solution {
 public:
     int strStr(string haystack, string needle) {
-        return haystack.find(needle);
+        auto f = haystack.find(needle);
+        return f == string::npos ? -1 : f;
     }
 };
